@@ -1,4 +1,5 @@
-from fastapi import FastAPI, status, Response, APIRouter
+from router.blog_post import required_functionality
+from fastapi import FastAPI, status, Response, APIRouter, Depends
 from enum import Enum
 from typing import Optional
 
@@ -7,16 +8,24 @@ router = APIRouter(
     tags = ['blog']
 )
 
-@router.get('/all',
-         summary = 'Retrieve all blogs',
-         description='This api call simulates fetching all blogs.',
-         response_description = 'The list of avaliab logs')
-def get_all_blogs(page = 1, page_size: Optional[int] = None):
-    return {'message' : f'All {page_size} blogs on page {page}'}
+
+
+@router.get(
+    '/all',
+    summary ='Retrieve all blogs',
+    description = 'This api call simulates fecting all blogs',
+    response_description = 'the list of avaliable blogs'
+)
+def get_blogs(page = 1 ,
+              page_size: Optional[int] = None,
+              req_parameters: dict = Depends(required_functionality)):
+
+    return {'message': f'All {page_size} blogs on page {page}', 'req': req_parameters}
 
 @router.get('/{id}/comments/{comment_id}',
          tags = ['comment'])
-def get_comment(id:int, comment_id:int, valid: bool=True, username: Optional[str] = None):
+def get_comment(id:int, comment_id:int, valid: bool=True,
+                username: Optional[str] = None):
     """
     Simulates retrieving a comment of a blog
     - **id** mandatory path parameter
@@ -32,8 +41,10 @@ class BlogType(str, Enum):
     howto = 'howto'
 
 @router.get('/type/{type}')
-def get_blog_type(type: BlogType):
-    return {'message': f'Blog type {type}'}
+def get_blog_type(type: BlogType,
+                  req_parameters: dict = Depends(required_functionality)
+                  ):
+    return {'message': f'Blog type {type}', 'req':req_parameters}
 
 ### Status Code
 @router.get('/{id}', status_code = status.HTTP_200_OK)

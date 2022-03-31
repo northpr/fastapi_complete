@@ -1,4 +1,4 @@
-from fastapi import FastAPI, status, Response
+from fastapi import FastAPI, status, Response, Body
 from router import blog_get
 from router import blog_post
 from enum import Enum
@@ -12,6 +12,10 @@ app.include_router(blog_post.router)
 def index():
     return {'message' : 'Hello World'}
 
+@app.post('/hello_test')
+def create_posts(payLoad: dict = Body(...)):
+    print(payLoad)
+    return {"message": f"succesfully created posts {payLoad}"}
 # @app.get('/blog/all')
 # def get_all_blogs():
 #     return {'message': 'All blogs provided'}
