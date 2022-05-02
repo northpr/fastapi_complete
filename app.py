@@ -21,7 +21,8 @@ def create_posts(payLoad: dict = Body(...)):
     print(payLoad)
     return {"message": f"succesfully created posts {payLoad}"}
 
-models.Base.metadata.create_all(engine)
+models.Base.metadata.create_all(engine) # if you change something such as structure - delete fastapi-practice.db
+
 # @app.get('/blog/all')
 # def get_all_blogs():
 #     return {'message': 'All blogs provided'}
